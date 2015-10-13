@@ -14,6 +14,7 @@ public class Header {
 	private short answerEntries;
 	private short authorityRecords;
 	private short additionalRecords;
+	private short flags; //added not sure if needed. 
 	
 	public short getId() {
 		return id;
@@ -102,10 +103,32 @@ public class Header {
 	public void setAdditionalRecords(short additionalRecords) {
 		this.additionalRecords = additionalRecords;
 	}
-	
+	//added by jpowers
+	public void setFlags(short flags){
+		this.flags = flags;
+	}
+	//added by jpowers
+	public short getFlags(){
+		return flags;
+	}
+	//Edited by Jpowers. 
+	//Got my source here: https://github.com/musiKk/dns/blob/master/src/main/java/com/github/musikk/dns/Header.java
 	public Header toBytes(ByteBuffer buf) {
+		/*
+		buf.setId(id);
+		flags = (short) ((request ? 0 : 1) << 15);
+		flags |= (opcode.getCode() & 0b1111) << 11;
+		// AA, TC set in response
+		flags |= (recursion ? 1 : 0) << 8;
+		// RA, RCODE set in response
+
+		buf.setFlags(flags);
+		buf.setQuestionEntries(questionEntries);
+		buf.setAnwserEntries(answerEntries);
+		buf.setAuthorityRecords(authorityRecords);
+		buf.setAdditionalRecords(additionalRecords);
+		return this;*/
 		return null;
-		//need to implement
 	}
 	
 	public Header fromBytes(ByteBuffer buf) throws IOException {

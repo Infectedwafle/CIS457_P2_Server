@@ -5,11 +5,12 @@ import java.nio.ByteBuffer;
 public class Header {
 	private short id;
 	private boolean request;
-	private Header.Opcode opcode;
+	private short opcode;
 	private boolean authoritativeAnswer;
 	private boolean truncated;
 	private boolean recursion;
-	private Header.ResponseCode responseCode;
+	private boolean canRecurse;
+	private short responseCode;
 	private short questionEntries;
 	private short answerEntries;
 	private short authorityRecords;
@@ -32,11 +33,11 @@ public class Header {
 		this.request = request;
 	}
 
-	public Header.Opcode getOpcode() {
+	public short getOpcode() {
 		return opcode;
 	}
 
-	public void setOpcode(Header.Opcode opcode) {
+	public void setOpcode(short opcode) {
 		this.opcode = opcode;
 	}
 
@@ -64,11 +65,11 @@ public class Header {
 		this.recursion = recursion;
 	}
 
-	public Header.ResponseCode getResponseCode() {
+	public short getResponseCode() {
 		return responseCode;
 	}
 
-	public void setResponseCode(Header.ResponseCode responseCode) {
+	public void setResponseCode(short responseCode) {
 		this.responseCode = responseCode;
 	}
 
@@ -114,65 +115,46 @@ public class Header {
 	//Edited by Jpowers. 
 	//Got my source here: https://github.com/musiKk/dns/blob/master/src/main/java/com/github/musikk/dns/Header.java
 	public Header toBytes(ByteBuffer buf) {
-		/*
-		buf.setId(id);
+		
+		buf.putShort(id);
 		flags = (short) ((request ? 0 : 1) << 15);
-		flags |= (opcode.getCode() & 0b1111) << 11;
+		flags |= (this.getOpcode() & 0b1111) << 11;
 		// AA, TC set in response
 		flags |= (recursion ? 1 : 0) << 8;
 		// RA, RCODE set in response
 
-		buf.setFlags(flags);
-		buf.setQuestionEntries(questionEntries);
-		buf.setAnwserEntries(answerEntries);
-		buf.setAuthorityRecords(authorityRecords);
-		buf.setAdditionalRecords(additionalRecords);
-		return this;*/
-		return null;
+		buf.putShort(flags);
+		buf.putShort(questionEntries);
+		buf.putShort(answerEntries);
+		buf.putShort(authorityRecords);
+		buf.putShort(additionalRecords);
+		return this;
 	}
 	
 	public Header fromBytes(ByteBuffer buf) throws IOException {
-		return null;
-		//need to implement
+		id = buf.getShort();
+		int flags = buf.getShort();
+		request = ((flags >> 15) & 1) == 0;
+		opcode = buf.getShort((flags >> 11) & 0b1111);
+		authoritativeAnswer = ((flags >> 10) & 1) == 1;
+		truncated = ((flags >> 9) & 1) == 1;
+		recursion = ((flags >> 8) & 1) == 1;
+		canRecurse = ((flags >> 7) & 1) == 1;
+		responseCode = buf.getShort(flags & 0b1111);
+
+		questionEntries = buf.getShort();
+		answerEntries = buf.getShort();
+		authorityRecords = buf.getShort();
+		additionalRecords = buf.getShort();
+
+		return this;
 	}
 	
-	public enum ResponseCode {
-		NO_ERROR(0), FORMAT_ERROR(1), SERVER_FAILURE(2), NAME_ERROR(3),
-		NOT_IMPLEMENTED(4), REFUSED(5);
-		private final int code;
-
-		private ResponseCode(int code) {
-			this.code = code;
-		}
-		public int getCode() {
-			return code;
-		}
-		public static Header.ResponseCode byCode(int code) {
-			for (Header.ResponseCode r : values()) {
-				if (r.code == code) {
-					return r;
-				}
-			}
-			throw new IllegalArgumentException("No response for code " + code + " exists.");
-		}
+	public boolean isCanRecurse() {
+		return canRecurse;
 	}
 
-	public enum Opcode {
-		QUERY(0), IQUERY(1), STATUS(2);
-		private final int code;
-		private Opcode(int code) {
-			this.code = code;
-		}
-		public int getCode() {
-			return code;
-		}
-		public static Header.Opcode byCode(int code) {
-			for (Header.Opcode o : values()) {
-				if (o.code == code) {
-					return o;
-				}
-			}
-			throw new IllegalArgumentException("No opcode for code "  + code + " exists.");
-		}
-	}	
+	public void setCanRecurse(boolean canRecurse) {
+		this.canRecurse = canRecurse;
+	}
 }

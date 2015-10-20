@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.util.Random;
 
 class Server {
 	public static void main(String args[]) throws Exception {
@@ -20,6 +21,24 @@ class Server {
 	    }
 	    // else we send the request to a root name server. 
 	    */
+	    Random r = new Random();
+	    Header header = new Header();
+	    header.setId((short) r.nextInt(65536));
+	    header.setRequest(false);
+	    header.setOpcode((short) 0); 
+	    header.setAuthortativeAnwser(false);
+	    header.setTruncated(false);
+	    header.setRecursion(true);
+	    header.setCanRecurse(false);
+	    header.setQuestionEntries((short) 1);
+	    
+	    
+	    
+	    DatagramPacket dnsRequest = new DatagramPacket(header.toBytes(buf), message.length(),, 52));
+	    
+	    
+	    System.out.println(IPAddress);
+	    
 	    byte[] sendData = message.getBytes();
 	    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
 	    serverSocket.send(sendPacket);

@@ -112,8 +112,6 @@ public class Header {
 	public short getFlags(){
 		return flags;
 	}
-	//Edited by Jpowers. 
-	//Got my source here: https://github.com/musiKk/dns/blob/master/src/main/java/com/github/musikk/dns/Header.java
 	public Header toBytes(ByteBuffer buf) {
 		
 		buf.putShort(id);

@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.*;
 import java.util.Random;
+import java.util.*;
 
 class Server {
 	public static void main(String args[]) throws Exception {
@@ -35,7 +36,7 @@ class Server {
 	      header.setRecursion(true);
 	      header.setCanRecurse(false);
 	      header.setQuestionEntries((short) 1);
-	      DatagramPacket dnsRequest = new DatagramPacket(header.toBytes(buf), message.length(),, 52));
+	      //DatagramPacket dnsRequest = new DatagramPacket(header.toBytes(message), message.length(),"198.41.0.4", 52);
 	      System.out.println(IPAddress);
 	      byte[] sendData = message.getBytes();
 	      DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);

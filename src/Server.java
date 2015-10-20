@@ -22,6 +22,7 @@ class Server {
 	      byte[] sendData = message.getBytes();
 	      DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
 	      serverSocket.send(sendPacket);
+	    }
 	    // else we send the request to a root name server. 
 	    else {
 	      Random r = new Random();

@@ -113,7 +113,7 @@ public class Header {
 		return flags;
 	}
 	public byte[] toBytes(){
-		ByteBuffer temp = ByteBuffer.wrap(new byte[1024]);
+		ByteBuffer temp = ByteBuffer.wrap(new byte[192]);
 		temp.putShort((short)id);
 		
 		short tflags = (short) ((request ? 0 : 1) << 15);

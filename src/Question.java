@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class Question {
+	private byte[] qName = new byte [256];
 	private short qType;
 	private short qClass;
 	private String questionName;
@@ -27,8 +28,9 @@ public class Question {
 	}
 
 	public byte[] toBytes() throws IOException {
-		ByteBuffer buf = ByteBuffer.wrap(new byte[1024]);
-		buf.put(questionName.getBytes());
+		ByteBuffer buf = ByteBuffer.wrap(new byte[260]);
+		
+		buf.put(qName);		
 		buf.putShort(qType);
 		buf.putShort(qClass);
 
@@ -37,15 +39,22 @@ public class Question {
 	
 	public Question fromBytes(ByteBuffer buf) {
 		String name = "";
+		int index = 0;
 		byte item = buf.get();
+		qName[index] = item;
+		index++;
 		while(item != 0){
 			
 			for(int i = 0; i < (int) item; i++){
 				byte temp = buf.get();
+				qName[index] = item;
+				index++;
 				name += (char) temp;
 			}
 			
 			item = buf.get();
+			qName[index] = item;
+			index++;
 			if(item != 0){
 				name += ".";
 			}

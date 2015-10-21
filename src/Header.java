@@ -3,7 +3,7 @@ import java.nio.ByteBuffer;
 
 
 public class Header {
-	private short id;
+	private int id;
 	private boolean request;
 	private short opcode;
 	private boolean authoritativeAnswer;
@@ -15,13 +15,13 @@ public class Header {
 	private short answerEntries;
 	private short authorityRecords;
 	private short additionalRecords;
-	private short flags; //added not sure if needed. 
+	private short flags;
 	
-	public short getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(short id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -112,25 +112,9 @@ public class Header {
 	public short getFlags(){
 		return flags;
 	}
-	public Header toBytes(ByteBuffer buf) {
-		
-		buf.putShort(id);
-		flags = (short) ((request ? 0 : 1) << 15);
-		flags |= (this.getOpcode() & 0b1111) << 11;
-		// AA, TC set in response
-		flags |= (recursion ? 1 : 0) << 8;
-		// RA, RCODE set in response
-
-		buf.putShort(flags);
-		buf.putShort(questionEntries);
-		buf.putShort(answerEntries);
-		buf.putShort(authorityRecords);
-		buf.putShort(additionalRecords);
-		return this;
-	}
 	
 	public Header fromBytes(ByteBuffer buf) throws IOException {
-		id = buf.getShort();
+		id = (buf.getShort() & 0xffff);
 		int flags = buf.getShort();
 		request = ((flags >> 15) & 1) == 0;
 		opcode = buf.getShort((flags >> 11) & 0b1111);
@@ -154,5 +138,22 @@ public class Header {
 
 	public void setCanRecurse(boolean canRecurse) {
 		this.canRecurse = canRecurse;
+	}
+	
+	public String toString(){
+		return  "id: " + id + " " +
+				"request: " + request + " " +
+				"opcode: " + opcode + " " +
+				"authoritativeAnswer: " + authoritativeAnswer + " " +
+				"truncated: " + truncated + " " +
+				"recursion: " + recursion + " " +
+				"canRecurse: " + canRecurse + " " +
+				"responseCode: " + responseCode + " " +
+				"questionEntries: " + questionEntries + " " +
+				"answerEntries: " + answerEntries + " " +
+				"authorityRecords: " + authorityRecords + " " +
+				"additionalRecords: " + additionalRecords + " " +
+				"flags: " + flags;
+		
 	}
 }

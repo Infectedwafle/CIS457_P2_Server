@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class Question {
@@ -25,6 +26,15 @@ public class Question {
 		return questionName;
 	}
 
+	public byte[] toBytes() throws IOException {
+		ByteBuffer buf = ByteBuffer.wrap(new byte[1024]);
+		buf.put(questionName.getBytes());
+		buf.putShort(qType);
+		buf.putShort(qClass);
+
+		return buf.array();
+	}
+	
 	public Question fromBytes(ByteBuffer buf) {
 		String name = "";
 		byte item = buf.get();

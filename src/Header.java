@@ -112,7 +112,23 @@ public class Header {
 	public short getFlags(){
 		return flags;
 	}
-	
+	public byte[] toBytes(){
+		ByteBuffer temp = ByteBuffer.wrap(new byte[1024]);
+		temp.putShort((short)id);
+		
+		short tflags = (short) ((request ? 0 : 1) << 15);
+		tflags |= (opcode & 0b1111) << 11;
+		// AA, TC set in response
+		tflags |= (recursion ? 1 : 0) << 8;
+		
+		temp.putShort(tflags);
+		temp.putShort(questionEntries);
+		temp.putShort(answerEntries);
+		temp.putShort(authorityRecords);
+		temp.putShort(additionalRecords);
+		
+		return temp.array();
+	}
 	public Header fromBytes(ByteBuffer buf) throws IOException {
 		id = ((int)(buf.getShort()) & 0xffff);
 		int flags = buf.getShort();

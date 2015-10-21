@@ -51,7 +51,9 @@ class Server {
 			serverSocket.receive(dnsRequest);
 			System.out.println("Response Recieved");
 			String message2 = new String(rData);
-			//System.out.println(message2);
+			
+			
+			System.out.println("Response Message: " + message2);
 			
 			ByteBuffer rBuf = ByteBuffer.wrap(message2.getBytes());
 			Header rHeader = new Header();
@@ -61,11 +63,15 @@ class Server {
 			
 			System.out.println("DNS Response: ");
 			System.out.println("Header: ");
-			System.out.println(header.toString());
+			System.out.println(rHeader.toString());
 			System.out.println("Question: ");
 			System.out.println(rQuestion.toString());
 			
-			byte[] sendData = rData;
+			byte[] sendData = new byte[rHeader.toBytes().length + rQuestion.toBytes().length];
+			
+			System.arraycopy(header.toBytes(), 0, sendData, 0, header.toBytes().length);
+			System.arraycopy(rQuestion.toBytes(), 0, sendData, header.toBytes().length, rQuestion.toBytes().length);
+			
 			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
 			System.out.println("Response sent to Client\n\n\n\n");
 			serverSocket.send(sendPacket);

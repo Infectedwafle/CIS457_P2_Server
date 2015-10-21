@@ -33,8 +33,20 @@ class Server {
 			System.out.println("Header: ");
 			System.out.println(header.toString());
 			System.out.println("Question: ");
-			System.out.println(ques.toString());
-			
+			System.out.println(ques.toString());           
+			if(ques.getqClass() != (short) 1){
+			    byte[] sendData = ("The class of domain you requested is not valid." +
+			    " Please use an Internet address").getBytes();
+			    DatagramPacket messageReturn = new DatagramPacket(sendData, sendData.length, IPAddress, port);
+			    serverSocket.send(messageReturn);
+			}
+			else if(ques.getqType() != (short) 1){
+			    byte[] sendData = ("The type of address you requested is not valid. " +
+			    "Please use a host address.").getBytes();
+			    DatagramPacket messageReturn = new DatagramPacket(sendData, sendData.length, IPAddress, port);
+			    serverSocket.send(messageReturn);
+			}
+			else{
 			InetAddress address = InetAddress.getByName("8.8.8.8");
 			System.out.println("LENGTH: " + (header.toBytes().length + ques.toBytes().length));
 			
@@ -67,6 +79,7 @@ class Server {
 			DatagramPacket sendPacket = new DatagramPacket(rData, rData.length, IPAddress, port);
 			System.out.println("Response sent to Client\n\n\n\n");
 			serverSocket.send(sendPacket);
+			}
 		}
 	}
 

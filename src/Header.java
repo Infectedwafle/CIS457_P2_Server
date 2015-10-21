@@ -1,7 +1,12 @@
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-
+/*
+* Header Class
+* CIS 457 Project 2 Part 1
+* Kevin Anderson, Brett Greenman, Jonathan Powers
+* This class stores the header of the DNS request
+*/
 public class Header {
 	private int id;
 	private boolean request;
@@ -104,31 +109,30 @@ public class Header {
 	public void setAdditionalRecords(short additionalRecords) {
 		this.additionalRecords = additionalRecords;
 	}
-	//added by jpowers
+
 	public void setFlags(short flags){
 		this.flags = flags;
 	}
-	//added by jpowers
+
 	public short getFlags(){
 		return flags;
 	}
+
 	public byte[] toBytes(){
 		ByteBuffer temp = ByteBuffer.wrap(new byte[192]);
 		temp.putShort((short)id);
-		
 		short tflags = (short) ((request ? 0 : 1) << 15);
 		tflags |= (opcode & 0b1111) << 11;
 		// AA, TC set in response
 		tflags |= (recursion ? 1 : 0) << 8;
-		
 		temp.putShort(tflags);
 		temp.putShort(questionEntries);
 		temp.putShort(answerEntries);
 		temp.putShort(authorityRecords);
 		temp.putShort(additionalRecords);
-		
 		return temp.array();
 	}
+
 	public Header fromBytes(ByteBuffer buf) throws IOException {
 		id = ((int)(buf.getShort()) & 0xffff);
 		int flags = buf.getShort();
@@ -139,12 +143,10 @@ public class Header {
 		recursion = ((flags >> 8) & 1) == 1;
 		canRecurse = ((flags >> 7) & 1) == 1;
 		responseCode = (short)(flags & 0b1111);
-
 		questionEntries = buf.getShort();
 		answerEntries = buf.getShort();
 		authorityRecords = buf.getShort();
 		additionalRecords = buf.getShort();
-
 		return this;
 	}
 	
@@ -170,6 +172,5 @@ public class Header {
 				"authorityRecords: " + authorityRecords + " " +
 				"additionalRecords: " + additionalRecords + " " +
 				"flags: " + flags;
-		
 	}
 }

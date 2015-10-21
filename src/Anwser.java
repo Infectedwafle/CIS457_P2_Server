@@ -1,7 +1,13 @@
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-
+/*
+* Answer class
+* CIS 457 Project 2 part 1
+* Kevin Anderson, Brett Greenman, Jonathan Powers
+* This class is used to store the DNS answer. It will be used to see if the answer is a 
+* forward to another DNS server or the actual answer that is needed. 
+*/
 public class Anwser {
 	String name;
 	short type;
@@ -55,7 +61,6 @@ public class Anwser {
 		buf.putInt(ttl);
 		buf.putShort(rdlength);
 		buf.putInt(rdata);
-
 		return buf.array();
 	}
 	
@@ -63,25 +68,21 @@ public class Anwser {
 		String tempName = "";
 		byte item = buf.get();
 		while(item != 0){
-			
 			for(int i = 0; i < (int) item; i++){
 				byte temp = buf.get();
 				tempName += (char) temp;
 			}
-			
 			item = buf.get();
 			if(item != 0){
 				tempName += ".";
 			}
 		}
-		
 		name = tempName;
 		type = buf.getShort();
 		aClass = buf.getShort();
 		ttl = buf.getInt();
 		rdlength = buf.getShort();
-		rdata = buf.getInt();
-				
+		rdata = buf.getInt();	
 		return this;
 	}
 }

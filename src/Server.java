@@ -3,6 +3,13 @@ import java.net.*;
 import java.util.*;
 import java.nio.ByteBuffer;
 
+/*
+* Server class
+* CIS 457 Project 2, part 1
+* Kevin Anderson, Brett Greenman, Jonathan Powers
+* This is the main server class the listens for the requests
+* and forwards them onto the DNS servers. 
+*/
 class Server {
 	public static void main(String args[]) throws Exception {
 		DatagramSocket serverSocket = new DatagramSocket(9876);
@@ -15,20 +22,7 @@ class Server {
 			String message = new String(receiveData);
 			InetAddress IPAddress = receivePacket.getAddress();
 			int port = receivePacket.getPort();
-			// System.out.println("Got message: " + message);
-			// Need to check the message.
-			/*
-			 * if (!checkDomainRequest(message)){ // Send the client the RCODE
-			 * that the request is not // supported. System.out.println(
-			 * "Not a supported domain extension request from client"); message
-			 * = message + " is not a supported domain extension"; byte[]
-			 * sendData = message.getBytes(); DatagramPacket sendPacket = new
-			 * DatagramPacket(sendData, sendData.length, IPAddress, port);
-			 * serverSocket.send(sendPacket); }
-			 */
-			// else we send the request to a root name server.
-			// else {
-
+			
 			ByteBuffer buf = ByteBuffer.wrap(message.getBytes());
 			Header header = new Header();
 			header = header.fromBytes(buf);
@@ -45,7 +39,6 @@ class Server {
 			System.out.println("LENGTH: " + (header.toBytes().length + ques.toBytes().length));
 			
 			System.out.print(new String(receiveData));
-			
 			DatagramPacket dnsRequest = new DatagramPacket(receiveData, receiveData.length, address, 53);
 			System.out.println("\nRequest sent to Servers");
 			serverSocket.send(dnsRequest);
@@ -58,7 +51,6 @@ class Server {
 			
 			
 			System.out.println("Response Message: " + message2);
-			
 			ByteBuffer rBuf = ByteBuffer.wrap(message2.getBytes());
 			Header rHeader = new Header();
 			rHeader = rHeader.fromBytes(rBuf);
@@ -72,7 +64,6 @@ class Server {
 			System.out.println(rQuestion.toString());
 			
 			byte[] sendData = rData;
-			
 			DatagramPacket sendPacket = new DatagramPacket(rData, rData.length, IPAddress, port);
 			System.out.println("Response sent to Client\n\n\n\n");
 			serverSocket.send(sendPacket);
@@ -80,9 +71,8 @@ class Server {
 	}
 
 	/*
-	 * This method checks the type and class of the request. If the type is
-	 * other than A and the class is other than IN the method should return
-	 * false;
+	 * This method checks domain extension of the request of a string.
+	 * It never gets used because we decided not to go this route. 
 	 */
 	public static boolean checkDomainRequest(String m)
 			throws FileNotFoundException {

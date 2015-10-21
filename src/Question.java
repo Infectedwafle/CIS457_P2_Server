@@ -1,6 +1,11 @@
 import java.io.IOException;
 import java.nio.ByteBuffer;
-
+/*
+* Question class
+* CIS 457 Project 2 part 1
+* Kevin Anderson, Brett Greenman, Jonathan Powers
+* This class is where the question is stored to be appended to the header. 
+*/
 public class Question {
 	private byte[] qName = new byte [256];
 	private short qType;
@@ -26,7 +31,7 @@ public class Question {
 	public String getqName() {
 		return questionName;
 	}
-
+	//This method adds the question to byte array. 
 	public byte[] toBytes() throws IOException {
 		ByteBuffer buf = ByteBuffer.wrap(new byte[260]);
 		
@@ -36,7 +41,7 @@ public class Question {
 
 		return buf.array();
 	}
-	
+	//This method gets the byte buffer and interprets the question from it. 
 	public Question fromBytes(ByteBuffer buf) {
 		String name = "";
 		int index = 0;
@@ -65,7 +70,7 @@ public class Question {
 		qClass = buf.getShort();
 		return this;
 	}
-	
+	//To string method used for error checking. 
 	public String toString(){
 		return  "name: " + questionName + " " +
 				"type: " + qType + " " +

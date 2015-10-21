@@ -34,7 +34,7 @@ class Server {
 			System.out.println(header.toString());
 			System.out.println("Question: ");
 			System.out.println(ques.toString());           
-			if(ques.getqClass() != (short) 1){
+			/*if(ques.getqClass() != (short) 1){
 			    byte[] sendData = ("The class of domain you requested is not valid." +
 			    " Please use an Internet address").getBytes();
 			    DatagramPacket messageReturn = new DatagramPacket(sendData, sendData.length, IPAddress, port);
@@ -46,8 +46,8 @@ class Server {
 			    DatagramPacket messageReturn = new DatagramPacket(sendData, sendData.length, IPAddress, port);
 			    serverSocket.send(messageReturn);
 			}
-			else{
-			InetAddress address = InetAddress.getByName("8.8.8.8");
+			else{*/
+			InetAddress address = InetAddress.getByName("192.33.4.12");
 			System.out.println("LENGTH: " + (header.toBytes().length + ques.toBytes().length));
 			
 			System.out.print(new String(receiveData));
@@ -69,6 +69,16 @@ class Server {
 			Question rQuestion = new Question();
 			rQuestion = rQuestion.fromBytes(rBuf);
 			
+			//Start the recursion process. 
+			if(rHeader.getAuthorityRecords() > (short) 0 || rHeader.getAdditionalRecords() > (short) 0){
+			    System.out.println("Not the droids you are looking for\n\n");
+			    address = InetAddress.getByName("192.5.6.30"); //Hard coded a value for .edu domain for testing
+			    dnsRequest = new DatagramPacket(receiveData, receiveData.length, address, 53);
+			    dnsResponse = new DatagramPacket(rData, rData.length);
+			    serverSocket.receive(dnsResponse);
+			    System.out.println("Response Recieved 2\n");
+			}
+
 			System.out.println("DNS Response: ");
 			System.out.println("Header: ");
 			System.out.println(rHeader.toString());
@@ -79,7 +89,7 @@ class Server {
 			DatagramPacket sendPacket = new DatagramPacket(rData, rData.length, IPAddress, port);
 			System.out.println("Response sent to Client\n\n\n\n");
 			serverSocket.send(sendPacket);
-			}
+			//}
 		}
 	}
 

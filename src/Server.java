@@ -42,8 +42,11 @@ class Server {
 			System.out.println(ques.toString());
 			
 			InetAddress address = InetAddress.getByName("8.8.8.8");
-			System.out.println("LENGTH: " + message.length());
-			DatagramPacket dnsRequest = new DatagramPacket(message.trim().getBytes(), message.trim().getBytes().length, address, 53);
+			System.out.println("LENGTH: " + (header.toBytes().length + ques.toBytes().length));
+			
+			System.out.print(new String(receiveData));
+			
+			DatagramPacket dnsRequest = new DatagramPacket(receiveData, receiveData.length, address, 53);
 			System.out.println("\nRequest sent to Servers");
 			serverSocket.send(dnsRequest);
 			
@@ -68,12 +71,9 @@ class Server {
 			System.out.println("Question: ");
 			System.out.println(rQuestion.toString());
 			
-			byte[] sendData = new byte[rHeader.toBytes().length + rQuestion.toBytes().length];
+			byte[] sendData = rData;
 			
-			System.arraycopy(rHeader.toBytes(), 0, sendData, 0, rHeader.toBytes().length);
-			System.arraycopy(rQuestion.toBytes(), 0, sendData, rHeader.toBytes().length, rQuestion.toBytes().length);
-			
-			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
+			DatagramPacket sendPacket = new DatagramPacket(rData, rData.length, IPAddress, port);
 			System.out.println("Response sent to Client\n\n\n\n");
 			serverSocket.send(sendPacket);
 		}

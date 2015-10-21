@@ -1,11 +1,9 @@
 import java.nio.ByteBuffer;
 
 public class Question {
-	private String domainString;
 	private short qType;
 	private short qClass;
-	private long questionName;
-	private ByteBuffer question;
+	private String questionName;
 
 	public short getqType() {
 		return qType;
@@ -23,11 +21,7 @@ public class Question {
 		this.qClass = qClass;
 	}
 
-	public String getdomainString() {
-		return domainString;
-	}
-
-	public long getqName() {
+	public String getqName() {
 		return questionName;
 	}
 
@@ -47,6 +41,7 @@ public class Question {
 			}
 		}
 		
+		questionName = name;
 		qType = buf.getShort();
 		qClass = buf.getShort();
 		return this;

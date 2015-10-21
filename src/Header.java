@@ -114,15 +114,15 @@ public class Header {
 	}
 	
 	public Header fromBytes(ByteBuffer buf) throws IOException {
-		id = (buf.getShort() & 0xffff);
+		id = ((int)(buf.getShort()) & 0xffff);
 		int flags = buf.getShort();
 		request = ((flags >> 15) & 1) == 0;
-		opcode = buf.getShort((flags >> 11) & 0b1111);
+		opcode = (short)((flags >> 11) & 0b1111);
 		authoritativeAnswer = ((flags >> 10) & 1) == 1;
 		truncated = ((flags >> 9) & 1) == 1;
 		recursion = ((flags >> 8) & 1) == 1;
 		canRecurse = ((flags >> 7) & 1) == 1;
-		responseCode = buf.getShort(flags & 0b1111);
+		responseCode = (short)(flags & 0b1111);
 
 		questionEntries = buf.getShort();
 		answerEntries = buf.getShort();

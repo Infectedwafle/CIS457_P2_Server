@@ -29,7 +29,7 @@ class Server {
 			// else we send the request to a root name server.
 			// else {
 
-			ByteBuffer buf = ByteBuffer.wrap(receiveData);
+			ByteBuffer buf = ByteBuffer.wrap(message.getBytes());
 			Header header = new Header();
 			header = header.fromBytes(buf);
 			Question ques = new Question();
@@ -43,23 +43,23 @@ class Server {
 			
 			InetAddress address = InetAddress.getByName("192.228.79.201");
 			DatagramPacket dnsRequest = new DatagramPacket(message.getBytes(), message.getBytes().length, address, 52);
-			System.out.println("\n\nRequest sent to Servers");
+			System.out.println("\nRequest sent to Servers");
 			serverSocket.send(dnsRequest);
 			
 			byte[] rData = new byte[1024];
 			DatagramPacket dnsResponse = new DatagramPacket(rData, rData.length);
 			serverSocket.receive(dnsRequest);
-			System.out.println("\n\nResponse Recieved");
+			System.out.println("Response Recieved");
 			String message2 = new String(rData);
 			//System.out.println(message2);
 			
-			ByteBuffer rBuf = ByteBuffer.wrap(rData);
+			ByteBuffer rBuf = ByteBuffer.wrap(message2.getBytes());
 			Header rHeader = new Header();
 			rHeader = rHeader.fromBytes(rBuf);
 			Question rQuestion = new Question();
 			rQuestion = rQuestion.fromBytes(rBuf);
 			
-			System.out.println("Client Request: ");
+			System.out.println("DNS Response: ");
 			System.out.println("Header: ");
 			System.out.println(header.toString());
 			System.out.println("Question: ");
@@ -67,7 +67,7 @@ class Server {
 			
 			byte[] sendData = rData;
 			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
-			System.out.println("Response sent to Client");
+			System.out.println("Response sent to Client\n\n\n\n");
 			serverSocket.send(sendPacket);
 		}
 	}

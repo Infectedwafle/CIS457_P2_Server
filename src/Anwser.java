@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 
@@ -46,11 +47,41 @@ public class Anwser {
 		this.rdata = rdata;
 	}
 	
+	public byte[] toBytes() throws IOException {
+		ByteBuffer buf = ByteBuffer.wrap(new byte[1024]);
+		buf.put(name.getBytes());
+		buf.putShort(type);
+		buf.putShort(aClass);
+		buf.putInt(ttl);
+		buf.putShort(rdlength);
+		buf.putInt(rdata);
+
+		return buf.array();
+	}
+	
 	public Anwser fromBytes(ByteBuffer buf){
+		String tempName = "";
+		byte item = buf.get();
+		while(item != 0){
+			
+			for(int i = 0; i < (int) item; i++){
+				byte temp = buf.get();
+				tempName += (char) temp;
+			}
+			
+			item = buf.get();
+			if(item != 0){
+				tempName += ".";
+			}
+		}
 		
-		
-		
-		
+		name = tempName;
+		type = buf.getShort();
+		aClass = buf.getShort();
+		ttl = buf.getInt();
+		rdlength = buf.getShort();
+		rdata = buf.getInt();
+				
 		return this;
 	}
 }

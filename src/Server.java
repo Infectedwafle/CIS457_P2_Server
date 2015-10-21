@@ -7,7 +7,7 @@ class Server {
 	public static void main(String args[]) throws Exception {
 		DatagramSocket serverSocket = new DatagramSocket(9876);
 		while (true) {
-			byte[] receiveData = new byte[1024];
+			byte[] receiveData = new byte[512];
 			DatagramPacket receivePacket = new DatagramPacket(receiveData,
 					receiveData.length);
 			serverSocket.receive(receivePacket);
@@ -41,14 +41,15 @@ class Server {
 			System.out.println("Question: ");
 			System.out.println(ques.toString());
 			
-			InetAddress address = InetAddress.getByName("192.228.79.201");
-			DatagramPacket dnsRequest = new DatagramPacket(message.getBytes(), message.getBytes().length, address, 52);
+			InetAddress address = InetAddress.getByName("8.8.8.8");
+			System.out.println("LENGTH: " + message.length());
+			DatagramPacket dnsRequest = new DatagramPacket(message.trim().getBytes(), message.trim().getBytes().length, address, 53);
 			System.out.println("\nRequest sent to Servers");
 			serverSocket.send(dnsRequest);
 			
-			byte[] rData = new byte[1024];
+			byte[] rData = new byte[512];
 			DatagramPacket dnsResponse = new DatagramPacket(rData, rData.length);
-			serverSocket.receive(dnsRequest);
+			serverSocket.receive(dnsResponse);
 			System.out.println("Response Recieved");
 			String message2 = new String(rData);
 			
@@ -69,8 +70,8 @@ class Server {
 			
 			byte[] sendData = new byte[rHeader.toBytes().length + rQuestion.toBytes().length];
 			
-			System.arraycopy(header.toBytes(), 0, sendData, 0, header.toBytes().length);
-			System.arraycopy(rQuestion.toBytes(), 0, sendData, header.toBytes().length, rQuestion.toBytes().length);
+			System.arraycopy(rHeader.toBytes(), 0, sendData, 0, rHeader.toBytes().length);
+			System.arraycopy(rQuestion.toBytes(), 0, sendData, rHeader.toBytes().length, rQuestion.toBytes().length);
 			
 			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
 			System.out.println("Response sent to Client\n\n\n\n");
